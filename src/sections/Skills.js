@@ -1,54 +1,69 @@
-import { Container, Typography, Grid, Chip } from "@mui/material";
-import { motion } from "framer-motion";
+import React from 'react';
+import { motion } from 'framer-motion';
+import {
+  Code2,
+  Palette,
+  FileCode,
+  GitBranch,
+  Layout,
+  Box,
+  Layers,
+  Cloud,
+  Server,
+  Database,
+  Cpu
+} from 'lucide-react';
 
-const categorizedSkills = {
-  "Programming Languages": ["Java", "Python", "JavaScript", "SQL", "C", "HTML", "CSS"],
-  "Frameworks & Libraries": ["Angular", "React", "Node.js", "Express", "Spring Boot", "Django"],
-  "Databases": ["MySQL", "PostgreSQL", "MongoDB"],
-  "Cloud Platforms & DevOps": [
-    "AWS",
-    "GCP",
-    "Jenkins",
-    "Git",
-    "Docker"
-  ],
-  "Tools & Environments": ["VS Code", "GitHub", "Eclipse", "PyCharm", "Windows", "Ubuntu"],
-  "Emerging Tech": ["Blockchain (Ethereum)", "Web3.js", "Solidity"]
-};
+const skills = [
+  { name: 'JavaScript', icon: <Code2 size={16} /> },
+  { name: 'Tailwind CSS', icon: <Palette size={16} /> },
+  { name: 'TypeScript', icon: <FileCode size={16} /> },
+  { name: 'Git', icon: <GitBranch size={16} /> },
+  { name: 'React', icon: <Layout size={16} /> },
+  { name: 'Docker', icon: <Box size={16} /> },
+  { name: 'Next.js', icon: <Layers size={16} /> },
+  { name: 'AWS', icon: <Cloud size={16} /> },
+  { name: 'Node.js', icon: <Server size={16} /> },
+  { name: 'MongoDB', icon: <Database size={16} /> },
+  { name: 'Express.js', icon: <Cpu size={16} /> },
+  { name: 'PostgreSQL', icon: <Database size={16} /> },
+  { name: 'HTML5', icon: <Code2 size={16} /> },
+  { name: 'GraphQL', icon: <GitBranch size={16} /> },
+  { name: 'CSS3', icon: <Palette size={16} /> },
+  { name: 'Redis', icon: <Database size={16} /> }
+];
 
 export default function Skills() {
   return (
-    <Container id="skills" sx={{ py: 10 }}>
-      <Typography variant="h4" gutterBottom>
-        Skills
-      </Typography>
-      {Object.entries(categorizedSkills).map(([category, skills], categoryIndex) => (
-        <motion.div
-          key={category}
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: categoryIndex * 0.2 }}
-          viewport={{ once: true }}
-        >
-          <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
-            {category}
-          </Typography>
-          <Grid container spacing={2}>
-            {skills.map((skill, skillIndex) => (
-              <Grid item key={skill}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3, delay: skillIndex * 0.05 }}
-                  viewport={{ once: true }}
-                >
-                  <Chip label={skill} />
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </motion.div>
-      ))}
-    </Container>
+    <section id="skills" className="py-24 px-8 md:px-16 max-w-screen-2xl mx-auto">
+      <div className="mb-12">
+        <h2 className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4">
+          Core Skills.
+        </h2>
+        <p className="text-[#A1A1AA] font-light max-w-xl">
+          A selection of tools and technologies I use to build modern digital experiences.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {skills.map((skill, index) => (
+          <motion.div
+            key={skill.name}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+          >
+            <div className="text-[#A1A1AA]">
+              {skill.icon}
+            </div>
+            <span className="text-sm text-gray-200 font-medium tracking-wide">
+              {skill.name}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </section>
   );
 }

@@ -1,13 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+  .bg-grid {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+}
+:root {
+  color-scheme: dark;
+  background: #000000;
+}
+
+html {
+  background: #000000;
+  scroll-behavior: auto;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  min-width: 320px;
+  background: #000000;
+  color: #ffffff;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #ffffff;
+  color: #000000;
+}
+
+img {
+  display: block;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: "Space Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
