@@ -1,4 +1,6 @@
 import logo from "../assets/logo.svg";
+import config from "../config";
+
 export default function Header() {
   const navItems = [
     { id: 'about', label: 'ABOUT' },
@@ -13,7 +15,7 @@ export default function Header() {
       <div className="w-full max-w-screen-2xl px-8 md:px-16 flex items-center justify-between">
 
         {/* Left Logo */}
-        <a href="/portfolio" className="hover:opacity-80 transition-opacity">
+        <a href={config.homePath} className="hover:opacity-80 transition-opacity">
           <img
             src={logo}
             alt="AS Logo"

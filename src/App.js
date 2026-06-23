@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import Lenis from "@studio-freight/lenis";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 
 export default function App() {
@@ -27,10 +27,8 @@ export default function App() {
   }, []);
 
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Home />} />
+    </Routes>
   );
 }
