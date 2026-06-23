@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const experiences = [
   {
     period: '2022 - Present',
-    title: 'Senior Software Engineer',
+    title: 'Software Engineer',
     company: 'Innovatech Solutions',
     description: 'Leading core product development, system design, and mentoring engineers.'
   },

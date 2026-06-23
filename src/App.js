@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Lenis from "@studio-freight/lenis";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
