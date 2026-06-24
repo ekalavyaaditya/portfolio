@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <section id="about" className="flex flex-col px-8 pt-5 pb-5 md:px-16 max-w-screen-2xl mx-auto border-t border-white/5">
+    <section id="about" className="flex flex-col px-8 pt-5 pb-5 mt-3 md:px-16 max-w-screen-2xl mx-auto border-t border-white/5">
       {/* About Me */}
       <div className="lg:col-span-4 space-y-8">
         <div className="space-y-2">
