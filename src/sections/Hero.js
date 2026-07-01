@@ -4,7 +4,7 @@ import mobileHeroBg from "../assets/moblie_view_point.png";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat lg:hidden"
         style={{ backgroundImage: `url(${mobileHeroBg})` }}

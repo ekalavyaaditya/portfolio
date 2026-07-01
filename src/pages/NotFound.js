@@ -47,32 +47,45 @@ export default function NotFound() {
     brand.position.set(1.15, 0.1, -1.5);
     scene.add(brand);
 
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particleCount = 420;
-    const positions = new Float32Array(particleCount * 3);
+    const rainGeometry = new THREE.BufferGeometry();
+    const rainCount = 720;
+    const rainPositions = new Float32Array(rainCount * 6);
+    const rainVelocity = new Float32Array(rainCount);
+    const rainDepthDrift = new Float32Array(rainCount);
 
-    for (let i = 0; i < particleCount; i += 1) {
-      const radius = 2.6 + Math.random() * 2.6;
-      const angle = Math.random() * Math.PI * 2;
-      const y = (Math.random() - 0.5) * 4.2;
-      positions[i * 3] = Math.cos(angle) * radius;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = Math.sin(angle) * radius;
+    for (let i = 0; i < rainCount; i += 1) {
+      const x = (Math.random() - 0.5) * 12;
+      const y = (Math.random() - 0.5) * 8;
+      const z = (Math.random() - 0.5) * 5;
+      const length = 0.18 + Math.random() * 0.28;
+      const slant = 0.04 + Math.random() * 0.08;
+      const index = i * 6;
+
+      rainPositions[index] = x;
+      rainPositions[index + 1] = y;
+      rainPositions[index + 2] = z;
+      rainPositions[index + 3] = x + slant;
+      rainPositions[index + 4] = y - length;
+      rainPositions[index + 5] = z;
+
+      rainVelocity[i] = 0.035 + Math.random() * 0.045;
+      rainDepthDrift[i] = 0.001 + Math.random() * 0.003;
     }
 
-    particlesGeometry.setAttribute(
+    rainGeometry.setAttribute(
       "position",
-      new THREE.BufferAttribute(positions, 3)
+      new THREE.BufferAttribute(rainPositions, 3)
     );
 
-    const particlesMaterial = new THREE.PointsMaterial({
-      color: 0xa1a1aa,
-      size: 0.025,
+    const rainMaterial = new THREE.LineBasicMaterial({
+      color: 0xcbd5e1,
       transparent: true,
-      opacity: 0.72,
+      opacity: 0.38,
+      blending: THREE.AdditiveBlending,
     });
-    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particles);
+    const rain = new THREE.LineSegments(rainGeometry, rainMaterial);
+    rain.rotation.z = -0.08;
+    scene.add(rain);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
@@ -94,11 +107,12 @@ export default function NotFound() {
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    const drift = gsap.to(particles.rotation, {
-      y: Math.PI * 2,
-      duration: 36,
+    const rainSway = gsap.to(rain.rotation, {
+      z: -0.14,
+      duration: 3.4,
       repeat: -1,
-      ease: "none",
+      yoyo: true,
+      ease: "sine.inOut",
     });
 
     const brandFloat = gsap.to(brand.position, {
@@ -121,7 +135,35 @@ export default function NotFound() {
 
     let animationFrame = 0;
     const render = () => {
-      particles.rotation.x += 0.0008;
+      const positions = rainGeometry.attributes.position.array;
+
+      for (let i = 0; i < rainCount; i += 1) {
+        const index = i * 6;
+        const speed = rainVelocity[i];
+        const driftSpeed = rainDepthDrift[i];
+
+        positions[index] += driftSpeed;
+        positions[index + 1] -= speed;
+        positions[index + 3] += driftSpeed;
+        positions[index + 4] -= speed;
+
+        if (positions[index + 1] < -4.5) {
+          const x = (Math.random() - 0.5) * 12;
+          const y = 4.3 + Math.random() * 1.8;
+          const z = (Math.random() - 0.5) * 5;
+          const length = 0.18 + Math.random() * 0.28;
+          const slant = 0.04 + Math.random() * 0.08;
+
+          positions[index] = x;
+          positions[index + 1] = y;
+          positions[index + 2] = z;
+          positions[index + 3] = x + slant;
+          positions[index + 4] = y - length;
+          positions[index + 5] = z;
+        }
+      }
+
+      rainGeometry.attributes.position.needsUpdate = true;
       renderer.render(scene, camera);
       animationFrame = requestAnimationFrame(render);
     };
@@ -131,14 +173,14 @@ export default function NotFound() {
     return () => {
       cancelAnimationFrame(animationFrame);
       window.removeEventListener("resize", handleResize);
-      drift.kill();
+      rainSway.kill();
       brandFloat.kill();
       intro.kill();
       brandTexture.dispose();
       brandGeometry.dispose();
       brandMaterial.dispose();
-      particlesGeometry.dispose();
-      particlesMaterial.dispose();
+      rainGeometry.dispose();
+      rainMaterial.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
@@ -147,7 +189,8 @@ export default function NotFound() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
       <div ref={canvasWrapRef} className="absolute inset-0" aria-hidden="true" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,0.13),rgba(0,0,0,0)_34%),linear-gradient(180deg,rgba(0,0,0,0.2),#000000_88%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,0.13),rgba(0,0,0,0)_34%),linear-gradient(180deg,rgba(10,10,12,0.18),#000000_88%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.08)_0,rgba(255,255,255,0)_18%,rgba(255,255,255,0)_100%)] opacity-50" />
       <div className="absolute inset-0 bg-grid opacity-80" />
 
       <section className="relative z-10 flex min-h-screen items-center px-8 py-24 md:px-16">
