@@ -72,14 +72,16 @@ export default function ScrollIndicator() {
         );
       });
 
-      // Hide text and chevrons on scroll
+      // Hide text and chevrons, and increase track height on scroll
       ScrollTrigger.create({
         start: 50,
         onEnter: () => {
           gsap.to([heroCue, chevrons], { autoAlpha: 0, duration: 0.3, overwrite: "auto" });
+          gsap.to(line, { height: "35em", duration: 0.3, ease: "power2.out", overwrite: "auto" });
         },
         onLeaveBack: () => {
           gsap.to([heroCue, chevrons], { autoAlpha: 1, duration: 0.3, overwrite: "auto" });
+          gsap.to(line, { height: "120px", duration: 0.3, ease: "power2.out", overwrite: "auto" });
         }
       });
 
@@ -121,7 +123,6 @@ export default function ScrollIndicator() {
           </div>
         </div>
       </div>
-
       <div ref={lineRef} className="scroll-indicator__track">
         <span ref={fillRef} className="scroll-indicator__fill" />
         <span ref={dotRef} className="scroll-indicator__dot" />
