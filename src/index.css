@@ -192,7 +192,7 @@ code {
 
 @media (max-width: 768px) {
   .scroll-indicator {
-    left: 24px;
+    right: 24px;
     bottom: 40px;
   }
 
