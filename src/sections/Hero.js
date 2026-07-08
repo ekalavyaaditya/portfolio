@@ -16,7 +16,7 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 max-w-[1600px] mt-auto mb-12 mx-auto px-8 md:px-16 w-full">
+      <div className="relative z-10 max-w-[1600px] mt-auto mb-12 mx-auto px-6 md:px-16 w-full">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
           <div className="md:col-span-8 space-y-12">
             <div className="space-y-4">

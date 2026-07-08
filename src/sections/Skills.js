@@ -35,7 +35,7 @@ const skills = [
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-24 px-8 md:px-16 max-w-screen-2xl mx-auto">
+    <section id="skills" className="py-24 px-6 md:px-16 max-w-screen-2xl mx-auto">
       <div className="mb-12">
         <h2 className="text-3xl md:text-4xl font-light tracking-tight text-white mb-4">
           Core Skills.
@@ -45,7 +45,7 @@ export default function Skills() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {skills.map((skill, index) => (
           <motion.div
             key={skill.name}
@@ -53,12 +53,12 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
             viewport={{ once: true }}
-            className="flex items-center gap-3 p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+            className="flex items-center gap-3 p-3 md:p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
           >
-            <div className="text-[#A1A1AA]">
+            <div className="text-[#A1A1AA] shrink-0">
               {skill.icon}
             </div>
-            <span className="text-sm text-gray-200 font-medium tracking-wide">
+            <span className="text-xs md:text-sm text-gray-200 font-medium tracking-wide truncate">
               {skill.name}
             </span>
           </motion.div>

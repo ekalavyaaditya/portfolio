@@ -24,7 +24,7 @@ const experiences = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-32 px-8 md:px-16 max-w-[1600px] mx-auto">
+    <section id="experience" className="py-32 px-6 md:px-16 max-w-[1600px] mx-auto">
       <div className="mb-24">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 uppercase">
           Experience
@@ -34,7 +34,7 @@ export default function Experience() {
         </p>
       </div>
 
-      <div className="max-w-3xl border-l border-white/10 ml-2 md:ml-4 pl-8 md:pl-16 flex flex-col gap-16 relative">
+      <div className="max-w-3xl border-l border-white/10 ml-1 md:ml-4 pl-6 md:pl-16 flex flex-col gap-16 relative">
         {experiences.map((exp, index) => (
           <motion.div
             key={index}
@@ -45,7 +45,7 @@ export default function Experience() {
             className="relative group"
           >
             {/* Timeline Marker */}
-            <div className="absolute -left-[37px] md:-left-[69px] top-1.5 w-[9px] h-[9px] bg-[#000000] border border-white rounded-full group-hover:bg-white transition-colors duration-300"></div>
+            <div className="absolute -left-[29px] md:-left-[69px] top-1.5 w-[9px] h-[9px] bg-[#000000] border border-white rounded-full group-hover:bg-white transition-colors duration-300"></div>
             
             <div className="flex flex-col gap-2">
               <span className="text-xs font-mono tracking-[0.2em] text-[#A1A1AA] uppercase mb-2 block">
