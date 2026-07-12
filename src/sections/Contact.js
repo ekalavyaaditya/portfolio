@@ -2,7 +2,7 @@ import { Mail, Phone, MapPin, Globe, Code2 } from 'lucide-react';
 
 const contactInfo = [
   { label: 'EMAIL', value: 'ekalavyaaditya@gmail.com', icon: <Mail size={16} /> },
-  { label: 'PHONE', value: '+91 0110809527', icon: <Phone size={16} /> },
+  { label: 'PHONE', value: '+91 9110809527', icon: <Phone size={16} /> },
   { label: 'LOCATION', value: 'Bangalore, India', icon: <MapPin size={16} /> },
   { label: 'LINKEDIN', value: 'linkedin.com/in/ekalavya-aditya', icon: <Globe size={16} /> },
   { label: 'GITHUB', value: 'github.com/ekalavyaaditya', icon: <Code2 size={16} /> }
