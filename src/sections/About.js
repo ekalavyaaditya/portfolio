@@ -8,7 +8,7 @@ export default function About() {
         </div>
         <div className="space-y-6 text-sm text-gray-400 leading-relaxed">
           <p>
-            Results-driven Software Engineer with 5+ years of experience architecting and building performant, scalable, and secure web applications.
+            Results-driven Software Engineer with 2+ years of experience architecting and building performant, scalable, and secure web applications.
           </p>
           <p>
             Passionate about clean code, system design, and leveraging modern technologies to solve complex problems.
