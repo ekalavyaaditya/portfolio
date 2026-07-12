@@ -3,22 +3,41 @@ import { motion } from 'framer-motion';
 
 const experiences = [
   {
-    period: '2022 - Present',
+    period: 'Dec 2025 - Mar 2026',
     title: 'Software Engineer',
-    company: 'Innovatech Solutions',
-    description: 'Leading core product development, system design, and mentoring engineers.'
+    company: 'Inner Sprout Solutions',
+    description: [
+      'Elevated product data accuracy by partnering with the Wayfair Data Services team to optimize product-feed mapping and catalog relationships.',
+      'Engineered Inboxless, an email productivity platform integrating Gmail and Microsoft Outlook to unify communication workflows.',
+      'Architected investor and customer portals with Gmail and Outlook integrations, enabling seamless collaboration and workflow automation.',
+      'Collaborated across engineering, product, and data teams to deliver scalable, production-ready solutions.'
+    ]
   },
   {
-    period: '2020 - 2022',
+    period: 'Jul 2024 - Dec 2025',
     title: 'Software Engineer',
-    company: 'TechNova Systems',
-    description: 'Developed and maintained scalable web applications using MERN stack.'
+    company: 'AmberTag',
+    description: [
+      'Full-stack developer with 2.7+ years of experience, contributing to 9+ projects including Vama, HRM, Artree, MkRetail, LMS, CostPrize, Clearblue, Inboxless, and Wayfair.',
+      'Developed 20+ features across the full stack, built responsive UI components, and implemented features such as OTP-based sign-up flows.',
+      'Resolved 30+ bugs, improved UI responsiveness, and optimized modules, increasing application performance and workflow efficiency by ~25%, while collaborating with clients to identify and fix critical issues.'
+    ]
   },
   {
-    period: '2019 - 2020',
-    title: 'Associate Software Engineer',
-    company: 'WebCraft Technologies',
-    description: 'Built responsive UI components and RESTful APIs, collaborated with cross-functional teams.'
+    period: 'Apr 2024 - Jul 2024',
+    title: 'Software Engineer Intern',
+    company: 'AmberTag',
+    description: [
+      'Developed and implemented front-end components using React for Unisense, HRM, and Vama projects, enhancing user experience and integrating an internal company product.'
+    ]
+  },
+  {
+    period: 'Aug 2023 - Dec 2023',
+    title: 'Full Stack Web Developer Intern',
+    company: 'Kenpath',
+    description: [
+      'Leveraged the MEAN stack to develop and refine features for the "apurva.ai" project, significantly improving application performance and user interaction.'
+    ]
   }
 ];
 
@@ -46,7 +65,7 @@ export default function Experience() {
           >
             {/* Timeline Marker */}
             <div className="absolute -left-[29px] md:-left-[69px] top-1.5 w-[9px] h-[9px] bg-[#000000] border border-white rounded-full group-hover:bg-white transition-colors duration-300"></div>
-            
+
             <div className="flex flex-col gap-2">
               <span className="text-xs font-mono tracking-[0.2em] text-[#A1A1AA] uppercase mb-2 block">
                 {exp.period}
@@ -57,9 +76,17 @@ export default function Experience() {
               <span className="text-xs font-mono tracking-[0.1em] text-[#A1A1AA] mb-4 block">
                 {exp.company}
               </span>
-              <p className="text-[#A1A1AA] font-light leading-relaxed text-lg">
-                {exp.description}
-              </p>
+              <div className="text-[#A1A1AA] font-light leading-relaxed text-lg">
+                {Array.isArray(exp.description) ? (
+                  <ul className="list-disc pl-5 flex flex-col gap-2 marker:text-[#A1A1AA]/50">
+                    {exp.description.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>{exp.description}</p>
+                )}
+              </div>
             </div>
           </motion.div>
         ))}

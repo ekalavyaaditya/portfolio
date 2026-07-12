@@ -37,13 +37,16 @@ export default function Hero() {
                 experiences with modern technologies.
               </p>
             </div>
-            <button className="group flex items-center gap-4 border border-white/20 px-8 py-4 text-xs font-mono tracking-[0.2em] hover:bg-white hover:text-black transition-all">
+            <a
+              href="#projects"
+              className="group flex w-fit items-center gap-4 border border-white/20 px-8 py-4 text-xs font-mono tracking-[0.2em] hover:bg-white hover:text-black transition-all"
+            >
               VIEW MY WORK
               <ArrowRight
                 size={16}
                 className="group-hover:translate-x-2 transition-transform"
               />
-            </button>
+            </a>
           </div>
         </div>
       </div>
