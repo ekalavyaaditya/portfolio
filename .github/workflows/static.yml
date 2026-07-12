@@ -44,6 +44,11 @@ jobs:
 
   deploy:
     needs: build
+    # To require manual approval before deployment:
+    # 1. Go to your repository settings in GitHub: Settings > Environments
+    # 2. Click on the "github-pages" environment (or create it if it doesn't exist)
+    # 3. Check "Required reviewers" and add yourself as a reviewer
+    # 4. Save protection rules. GitHub will now wait for your approval before running this job.
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

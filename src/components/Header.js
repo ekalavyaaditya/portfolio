@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import logo from "../assets/logo.svg";
-import config from "../config";
 
 const navItems = [
   { id: "about", label: "ABOUT" },
@@ -51,7 +50,7 @@ export default function Header() {
       >
         <div className="flex w-full max-w-screen-2xl items-center justify-between px-5 sm:px-8 md:px-12 lg:px-16">
           <a
-            href={config.homePath}
+            href="/"
             onClick={closeMenu}
             className="transition-opacity duration-300 hover:opacity-80"
             aria-label="Go to homepage"
