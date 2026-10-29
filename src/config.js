@@ -1,9 +1,14 @@
 const normalizeBasePath = (path) => {
-  if (!path || path === "/") {
+  if (!path) {
     return "";
   }
 
-  return path.startsWith("/") ? path : `/${path}`;
+  const trimmed = path.trim().replace(/\/+$/, "");
+  if (!trimmed) {
+    return "";
+  }
+
+  return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 };
 
 const basePath = normalizeBasePath(process.env.REACT_APP_BASE_PATH || "/portfolio");

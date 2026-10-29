@@ -1,5 +1,8 @@
-import React from "react";
-import { motion } from "framer-motion";
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
   {
@@ -47,8 +50,52 @@ const projects = [
 ];
 
 export default function Projects() {
+  const projectsRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const section = projectsRef.current;
+    if (!section) return undefined;
+
+    const media = gsap.matchMedia();
+
+    media.add(
+      "(prefers-reduced-motion: no-preference)",
+      () => {
+        const cards = gsap.utils.toArray("[data-project-card]", section);
+        if (!cards.length) return undefined;
+
+        gsap.set(cards, {
+          autoAlpha: 0,
+          y: 32,
+          transition: "none",
+        });
+
+        ScrollTrigger.batch(cards, {
+          start: "top 84%",
+          once: true,
+          onEnter: (batch) => {
+            gsap.to(batch, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.75,
+              stagger: 0.12,
+              ease: "power3.out",
+              overwrite: true,
+              clearProps: "opacity,visibility,transform,transition",
+            });
+          },
+        });
+
+        return undefined;
+      },
+      section
+    );
+
+    return () => media.revert();
+  }, []);
+
   return (
-    <section id="projects" className="py-24">
+    <section ref={projectsRef} id="projects" className="py-24">
       <div className="px-6 md:px-16 max-w-[1600px] mx-auto mb-16">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6">
           SELECTED WORKS
@@ -60,25 +107,18 @@ export default function Projects() {
       </div>
 
       <div className="px-6 md:px-16 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {projects.map((project, index) => (
-          <motion.div
+        {projects.map((project) => (
+          <div
             key={project.id}
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: index * 0.1,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            viewport={{ once: true, margin: "-12%" }}
-            className="group relative flex min-h-[560px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.03] shadow-2xl shadow-black/30 transition-all duration-500 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.055]"
+            data-project-card
+            className="group relative flex min-h-[560px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.03] shadow-2xl shadow-black/30 transition-[transform,background-color,border-color] duration-500 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.055] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
             <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-white/70 via-white/20 to-transparent opacity-70" />
 
             <div className="flex w-full flex-col">
               <div className="relative h-56 overflow-hidden border-b border-white/10">
                 <div
-                  className="absolute inset-0 bg-cover bg-center grayscale transition-all duration-[1.2s] ease-out group-hover:scale-105 group-hover:grayscale-0"
+                  className="absolute inset-0 bg-cover bg-center grayscale transition-[transform,filter] duration-[1.2s] ease-out group-hover:scale-105 group-hover:grayscale-0 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                   style={{ backgroundImage: `url(${project.image})` }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-black/30 to-black/10" />
@@ -88,55 +128,19 @@ export default function Projects() {
               </div>
 
               <div className="flex flex-1 flex-col p-6 md:p-7">
-                <motion.p
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.1 + 0.1,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="mb-4 text-xs font-mono uppercase tracking-[0.24em] text-[#A1A1AA]"
-                >
+                <p className="mb-4 text-xs font-mono uppercase tracking-[0.24em] text-[#A1A1AA]">
                   Featured Build
-                </motion.p>
+                </p>
 
-                <motion.h3
-                  initial={{ y: 24, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: index * 0.1 + 0.15,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight"
-                >
+                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
                   {project.title}
-                </motion.h3>
+                </h3>
 
-                <motion.p
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: index * 0.1 + 0.2,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="mt-4 text-base text-[#A1A1AA] font-light leading-relaxed"
-                >
+                <p className="mt-4 text-base text-[#A1A1AA] font-light leading-relaxed">
                   {project.description}
-                </motion.p>
+                </p>
 
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: index * 0.1 + 0.25,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3"
-                >
+                <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                   {project.stats.map((stat) => (
                     <div
                       key={stat.label}
@@ -150,30 +154,21 @@ export default function Projects() {
                       </span>
                     </div>
                   ))}
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: index * 0.1 + 0.3,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="mt-auto flex flex-wrap gap-3 pt-8"
-                >
+                <div className="mt-auto flex flex-wrap gap-3 pt-8">
                   {project.tech.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-mono text-[#E4E4E7] transition-all duration-300 group-hover:border-white/30 group-hover:bg-white/10"
+                      className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[11px] font-mono text-[#E4E4E7] transition-colors duration-300 group-hover:border-white/30 group-hover:bg-white/10 motion-reduce:transition-none"
                     >
                       {tech}
                     </span>
                   ))}
-                </motion.div>
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>

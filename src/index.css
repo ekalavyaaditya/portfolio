@@ -72,7 +72,6 @@ code {
   align-items: center;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
-  will-change: bottom, transform, opacity;
   gap: 16px;
 }
 
@@ -80,7 +79,6 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
-  will-change: transform, opacity;
 }
 
 .scroll-indicator__text {
@@ -113,7 +111,13 @@ code {
   position: relative;
   width: 1px;
   height: 120px;
+}
+
+.scroll-indicator__track-line {
+  position: absolute;
+  inset: 0;
   background: rgba(255, 255, 255, 0.15);
+  transform-origin: bottom center;
   will-change: transform;
 }
 
@@ -167,7 +171,6 @@ code {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  will-change: transform, opacity;
 }
 
 .scroll-indicator__section {
@@ -274,20 +277,23 @@ code {
 
 .loading-fill {
   position: absolute;
-  inset: 0 auto 0 0;
+  inset: 0;
   background: linear-gradient(90deg, #ffffff, rgba(225, 241, 255, 0.94));
-  transition: width 120ms linear;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 
 .loading-dot {
   position: absolute;
+  left: 0;
   top: 50%;
   width: 0.62rem;
   height: 0.62rem;
   border-radius: 999px;
   background: #ffffff;
   transform: translate(-50%, -50%);
-  transition: left 120ms linear;
+  will-change: transform;
 }
 
 .loading-percent {

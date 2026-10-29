@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, createElement } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, createElement } from "react";
 import { gsap } from "gsap";
 import "./TextType.css";
 
@@ -33,7 +33,10 @@ const TextType = ({
   const cursorRef = useRef(null);
   const containerRef = useRef(null);
 
-  const textArray = Array.isArray(text) ? text : [text];
+  const textArray = useMemo(
+    () => (Array.isArray(text) ? text : [text]),
+    [text]
+  );
 
   const getRandomSpeed = () => {
     if (!variableSpeed) return typingSpeed;
@@ -47,7 +50,7 @@ const TextType = ({
   };
 
   useEffect(() => {
-    if (!startOnVisible || !containerRef.current) return;
+    if (!startOnVisible || !containerRef.current) return undefined;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -64,21 +67,32 @@ const TextType = ({
     return () => observer.disconnect();
   }, [startOnVisible]);
 
-  useEffect(() => {
-    if (showCursor && cursorRef.current) {
-      gsap.set(cursorRef.current, { opacity: 1 });
-      gsap.to(cursorRef.current, {
-        opacity: 0,
-        duration: cursorBlinkDuration,
-        repeat: -1,
-        yoyo: true,
-        ease: "power2.inOut",
-      });
-    }
+  useLayoutEffect(() => {
+    const cursor = cursorRef.current;
+    if (!showCursor || !cursor) return undefined;
+
+    const media = gsap.matchMedia();
+
+    media.add(
+      "(prefers-reduced-motion: no-preference)",
+      () => {
+        gsap.set(cursor, { opacity: 1 });
+        gsap.to(cursor, {
+          opacity: 0,
+          duration: cursorBlinkDuration,
+          repeat: -1,
+          yoyo: true,
+          ease: "power2.inOut",
+        });
+      },
+      containerRef
+    );
+
+    return () => media.revert();
   }, [showCursor, cursorBlinkDuration]);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) return undefined;
 
     let timeout;
     const currentText = textArray[currentTextIndex];
@@ -100,7 +114,7 @@ const TextType = ({
 
           setCurrentTextIndex((prev) => (prev + 1) % textArray.length);
           setCurrentCharIndex(0);
-          timeout = setTimeout(() => { }, pauseDuration);
+          timeout = setTimeout(() => {}, pauseDuration);
         } else {
           timeout = setTimeout(() => {
             setDisplayedText((prev) => prev.slice(0, -1));

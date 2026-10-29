@@ -1,225 +1,203 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import gsap from "gsap";
-import * as THREE from "three";
+import { ArrowLeft, Briefcase, Home as HomeIcon, Mail, User } from "lucide-react";
+import { gsap } from "gsap";
+import config from "../config";
+import notFoundBg from "../assets/not-found-bg.jpg";
+
+const quickLinks = [
+  { label: "HOME", hash: "", icon: HomeIcon },
+  { label: "ABOUT ME", hash: "#about", icon: User },
+  { label: "PROJECTS", hash: "#projects", icon: Briefcase },
+  { label: "CONTACT", hash: "#contact", icon: Mail },
+];
 
 export default function NotFound() {
-  const canvasWrapRef = useRef(null);
-  const titleRef = useRef(null);
-  const copyRef = useRef(null);
-  const actionRef = useRef(null);
+  const pageRef = useRef(null);
 
-  useEffect(() => {
-    const container = canvasWrapRef.current;
-    if (!container) {
-      return undefined;
-    }
+  useLayoutEffect(() => {
+    const page = pageRef.current;
+    if (!page) return undefined;
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.set(0, 0, 7);
+    const media = gsap.matchMedia();
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
+    media.add(
+      {
+        isMobile: "(max-width: 767px)",
+        reduceMotion: "(prefers-reduced-motion: reduce)",
+      },
+      ({ conditions }) => {
+        if (conditions.reduceMotion) return undefined;
 
-    const brandCanvas = document.createElement("canvas");
-    brandCanvas.width = 1024;
-    brandCanvas.height = 512;
-    const brandContext = brandCanvas.getContext("2d");
-    brandContext.clearRect(0, 0, brandCanvas.width, brandCanvas.height);
-    brandContext.font = "900 330px Inter, Arial, sans-serif";
-    brandContext.textAlign = "center";
-    brandContext.textBaseline = "middle";
-    brandContext.fillStyle = "rgba(255, 255, 255, 0.72)";
-    brandContext.fillText("AS", brandCanvas.width / 2, brandCanvas.height / 2 + 10);
+        const isMobile = Boolean(conditions.isMobile);
+        const bg = page.querySelector("[data-nf-bg]");
+        const digits = page.querySelectorAll("[data-nf-digit]");
+        const introTargets = page.querySelectorAll("[data-nf-intro]");
 
-    const brandTexture = new THREE.CanvasTexture(brandCanvas);
-    const brandGeometry = new THREE.PlaneGeometry(7.2, 3.6);
-    const brandMaterial = new THREE.MeshBasicMaterial({
-      map: brandTexture,
-      transparent: true,
-      opacity: 0.16,
-      depthWrite: false,
-    });
-    const brand = new THREE.Mesh(brandGeometry, brandMaterial);
-    brand.position.set(1.15, 0.1, -1.5);
-    scene.add(brand);
+        const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    const rainGeometry = new THREE.BufferGeometry();
-    const rainCount = 720;
-    const rainPositions = new Float32Array(rainCount * 6);
-    const rainVelocity = new Float32Array(rainCount);
-    const rainDepthDrift = new Float32Array(rainCount);
+        if (bg) {
+          timeline.fromTo(
+            bg,
+            { autoAlpha: 0, scale: isMobile ? 1.03 : 1.06 },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              duration: isMobile ? 0.95 : 1.15,
+              ease: "power2.out",
+              clearProps: "opacity,visibility,transform",
+            },
+            0
+          );
+        }
 
-    for (let i = 0; i < rainCount; i += 1) {
-      const x = (Math.random() - 0.5) * 12;
-      const y = (Math.random() - 0.5) * 8;
-      const z = (Math.random() - 0.5) * 5;
-      const length = 0.18 + Math.random() * 0.28;
-      const slant = 0.04 + Math.random() * 0.08;
-      const index = i * 6;
+        if (digits.length) {
+          timeline.fromTo(
+            digits,
+            {
+              autoAlpha: 0,
+              x: (index) => (index === 0 ? -24 : 24),
+            },
+            {
+              autoAlpha: 1,
+              x: 0,
+              duration: 0.85,
+              ease: "power3.out",
+              clearProps: "opacity,visibility,transform",
+            },
+            0.12
+          );
+        }
 
-      rainPositions[index] = x;
-      rainPositions[index + 1] = y;
-      rainPositions[index + 2] = z;
-      rainPositions[index + 3] = x + slant;
-      rainPositions[index + 4] = y - length;
-      rainPositions[index + 5] = z;
+        if (introTargets.length) {
+          timeline.fromTo(
+            introTargets,
+            { autoAlpha: 0, y: isMobile ? 16 : 24 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.7,
+              stagger: 0.1,
+              clearProps: "opacity,visibility,transform",
+            },
+            0.2
+          );
+        }
 
-      rainVelocity[i] = 0.035 + Math.random() * 0.045;
-      rainDepthDrift[i] = 0.001 + Math.random() * 0.003;
-    }
-
-    rainGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(rainPositions, 3)
+        return undefined;
+      },
+      page
     );
 
-    const rainMaterial = new THREE.LineBasicMaterial({
-      color: 0xcbd5e1,
-      transparent: true,
-      opacity: 0.38,
-      blending: THREE.AdditiveBlending,
-    });
-    const rain = new THREE.LineSegments(rainGeometry, rainMaterial);
-    rain.rotation.z = -0.08;
-    scene.add(rain);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-
-    const keyLight = new THREE.PointLight(0xffffff, 4.8, 18);
-    keyLight.position.set(2.5, 3, 4);
-    scene.add(keyLight);
-
-    const rimLight = new THREE.PointLight(0x8bd3ff, 2.2, 16);
-    rimLight.position.set(-3.5, -1.5, -2);
-    scene.add(rimLight);
-
-    const handleResize = () => {
-      const { clientWidth, clientHeight } = container;
-      camera.aspect = clientWidth / clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(clientWidth, clientHeight);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    const rainSway = gsap.to(rain.rotation, {
-      z: -0.14,
-      duration: 3.4,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-
-    const brandFloat = gsap.to(brand.position, {
-      y: 0.28,
-      duration: 4.5,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-
-    const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
-    intro
-      .fromTo(brandMaterial, { opacity: 0 }, { opacity: 0.16, duration: 1.1 })
-      .fromTo(
-        [titleRef.current, copyRef.current, actionRef.current],
-        { autoAlpha: 0, y: 28 },
-        { autoAlpha: 1, y: 0, duration: 0.75, stagger: 0.12 },
-        "-=0.65"
-      );
-
-    let animationFrame = 0;
-    const render = () => {
-      const positions = rainGeometry.attributes.position.array;
-
-      for (let i = 0; i < rainCount; i += 1) {
-        const index = i * 6;
-        const speed = rainVelocity[i];
-        const driftSpeed = rainDepthDrift[i];
-
-        positions[index] += driftSpeed;
-        positions[index + 1] -= speed;
-        positions[index + 3] += driftSpeed;
-        positions[index + 4] -= speed;
-
-        if (positions[index + 1] < -4.5) {
-          const x = (Math.random() - 0.5) * 12;
-          const y = 4.3 + Math.random() * 1.8;
-          const z = (Math.random() - 0.5) * 5;
-          const length = 0.18 + Math.random() * 0.28;
-          const slant = 0.04 + Math.random() * 0.08;
-
-          positions[index] = x;
-          positions[index + 1] = y;
-          positions[index + 2] = z;
-          positions[index + 3] = x + slant;
-          positions[index + 4] = y - length;
-          positions[index + 5] = z;
-        }
-      }
-
-      rainGeometry.attributes.position.needsUpdate = true;
-      renderer.render(scene, camera);
-      animationFrame = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      cancelAnimationFrame(animationFrame);
-      window.removeEventListener("resize", handleResize);
-      rainSway.kill();
-      brandFloat.kill();
-      intro.kill();
-      brandTexture.dispose();
-      brandGeometry.dispose();
-      brandMaterial.dispose();
-      rainGeometry.dispose();
-      rainMaterial.dispose();
-      renderer.dispose();
-      renderer.domElement.remove();
-    };
+    return () => media.revert();
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white">
-      <div ref={canvasWrapRef} className="absolute inset-0" aria-hidden="true" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(255,255,255,0.13),rgba(0,0,0,0)_34%),linear-gradient(180deg,rgba(10,10,12,0.18),#000000_88%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.08)_0,rgba(255,255,255,0)_18%,rgba(255,255,255,0)_100%)] opacity-50" />
-      <div className="absolute inset-0 bg-grid opacity-80" />
+    <main
+      ref={pageRef}
+      className="relative min-h-[100dvh] overflow-hidden bg-black text-white selection:bg-white selection:text-black"
+    >
+      {/* Full-bleed uploaded noir background artwork */}
+      <img
+        data-nf-bg
+        src={notFoundBg}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+        fetchPriority="high"
+        className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-[50%_20%] sm:object-[50%_22%] lg:object-center"
+      />
 
-      <section className="relative z-10 flex min-h-screen items-center px-8 py-24 md:px-16">
-        <div className="max-w-screen-2xl mx-auto w-full">
-          <div className="max-w-3xl">
-            <p className="mb-6 font-mono text-xs font-medium tracking-[0.3em] text-[#A1A1AA]">
+      {/* Atmospheric vignettes preserving center portrait & red glasses clarity */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.14)_26%,rgba(0,0,0,0.08)_50%,rgba(0,0,0,0.88)_84%,#000000_100%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_50%_40%,transparent_20%,rgba(0,0,0,0.62)_85%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-20 bg-noise opacity-70 mix-blend-screen"
+      />
+
+      {/* Flanking 4 and 4 framing the centered portrait as 404 */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[33svh] z-20 flex w-full max-w-[82rem] -translate-x-1/2 -translate-y-1/2 select-none items-center justify-between px-4 sm:top-[38svh] sm:px-8 md:top-[42svh] md:px-14 lg:px-20"
+      >
+        <span
+          data-nf-digit
+          className="font-display text-[clamp(6.5rem,22vw,20rem)] font-black leading-none tracking-tighter text-white/[0.14] drop-shadow-[0_12px_40px_rgba(0,0,0,0.85)]"
+        >
+          4
+        </span>
+        <span
+          data-nf-digit
+          className="font-display text-[clamp(6.5rem,22vw,20rem)] font-black leading-none tracking-tighter text-white/[0.14] drop-shadow-[0_12px_40px_rgba(0,0,0,0.85)]"
+        >
+          4
+        </span>
+      </div>
+
+      {/* Foreground layout */}
+      <section className="relative z-30 mx-auto flex min-h-[100dvh] w-full max-w-screen-2xl flex-col items-center justify-between px-5 py-8 text-center sm:px-8 sm:py-10 md:px-12 lg:px-16">
+        {/* Top status header */}
+        <header data-nf-intro className="flex w-full flex-col items-center gap-3 pt-2 md:pt-4">
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-black/50 px-4 py-1.5 backdrop-blur-md">
+            <span className="h-2 w-2 rounded-full bg-[#dc2626] shadow-[0_0_10px_rgba(220,38,38,0.9)]" />
+            <span className="font-mono text-[10px] font-semibold tracking-[0.34em] text-[#ef4444] sm:text-xs">
               ERROR 404
-            </p>
-            <h1
-              ref={titleRef}
-              className="text-7xl font-black leading-none tracking-normal text-white md:text-9xl lg:text-[10rem]"
-            >
-              LOST
-            </h1>
-            <p
-              ref={copyRef}
-              className="mt-8 max-w-xl font-mono text-sm leading-7 tracking-normal text-[#A1A1AA] md:text-base"
-            >
-              This page slipped out of orbit. Head back home and pick up the trail from the portfolio.
-            </p>
-            <div ref={actionRef} className="mt-10">
-              <Link
-                to="/"
-                className="inline-flex items-center border border-white/20 px-8 py-4 font-mono text-xs font-medium tracking-[0.2em] text-white transition-all hover:bg-white hover:text-black"
-              >
-                BACK HOME
-              </Link>
-            </div>
+            </span>
           </div>
+
+          <div className="flex w-full max-w-xl items-center justify-center gap-4 sm:gap-7">
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/25 to-white/5" />
+            <h1 className="font-mono text-xs font-medium tracking-[0.45em] text-white/80 [text-indent:0.45em] sm:text-sm sm:tracking-[0.55em] sm:[text-indent:0.55em]">
+              PAGE NOT FOUND
+            </h1>
+            <span className="h-px flex-1 bg-gradient-to-l from-transparent via-white/25 to-white/5" />
+          </div>
+        </header>
+
+        {/* Bottom copy, primary CTA, and section shortcuts */}
+        <div className="mt-auto flex w-full flex-col items-center pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:pb-6">
+          <p
+            data-nf-intro
+            className="max-w-2xl font-mono text-xs leading-relaxed tracking-[0.26em] text-white/85 uppercase sm:text-sm sm:tracking-[0.34em] md:text-base"
+          >
+            The page you are looking for{" "}
+            <span className="font-semibold text-[#ef4444]">doesn&apos;t exist</span>{" "}
+            <span className="text-white/70">or has slipped into the shadows.</span>
+          </p>
+
+          <div data-nf-intro className="mt-6 sm:mt-8">
+            <Link
+              to={config.homePath}
+              className="group inline-flex min-h-12 w-[min(24rem,calc(100vw-2.5rem))] items-center justify-center gap-4 border border-[#991b1b]/80 bg-black/60 px-7 py-3.5 font-mono text-xs font-semibold tracking-[0.28em] text-white shadow-[0_0_28px_rgba(185,28,28,0.16),inset_0_0_24px_rgba(185,28,28,0.1)] backdrop-blur-md transition-colors duration-300 hover:border-[#ef4444] hover:bg-[#1a0505]/85 sm:min-h-14 sm:text-sm"
+            >
+              <ArrowLeft className="h-4 w-4 flex-none text-[#ef4444] transition-transform duration-300 group-hover:-translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 sm:h-5 sm:w-5" />
+              <span>BACK TO HOME</span>
+            </Link>
+          </div>
+
+          <nav
+            data-nf-intro
+            aria-label="404 quick navigation"
+            className="mt-8 grid w-full max-w-2xl grid-cols-4 gap-2 border-t border-white/10 pt-5 text-white/50 sm:mt-9 sm:gap-6"
+          >
+            {quickLinks.map(({ label, hash, icon: Icon }) => (
+              <Link
+                key={label}
+                to={hash ? { pathname: config.homePath, hash } : config.homePath}
+                className="group flex min-w-0 flex-col items-center justify-center gap-1.5 font-mono text-[10px] font-medium tracking-[0.2em] transition-colors duration-300 hover:text-white motion-reduce:transition-none sm:flex-row sm:gap-2.5 sm:text-xs sm:tracking-[0.24em]"
+              >
+                <Icon className="h-4 w-4 flex-none stroke-[1.5] text-white/60 transition-colors duration-300 group-hover:text-[#ef4444] motion-reduce:transition-none" />
+                <span className="truncate">{label}</span>
+              </Link>
+            ))}
+          </nav>
         </div>
       </section>
     </main>
