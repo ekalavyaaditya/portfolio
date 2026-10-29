@@ -6,7 +6,7 @@ const contactInfo = [
   { label: 'LOCATION', value: 'Bangalore, India', icon: <MapPin size={16} /> },
   { label: 'LINKEDIN', value: 'linkedin.com/in/ekalavya-aditya', icon: <Globe size={16} /> },
   { label: 'GITHUB', value: 'github.com/ekalavyaaditya', icon: <Code2 size={16} /> },
-  { label: 'PORTFOLIO', value: 'ekalavyaaditya.github.io/portfolio', icon: <Laptop size={16} /> }
+  { label: 'PORTFOLIO', value: 'ekalavyaaditya.github.io', icon: <Laptop size={16} /> }
 ];
 
 export default function Contact() {

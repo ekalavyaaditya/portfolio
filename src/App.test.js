@@ -81,6 +81,36 @@ describe("Portfolio pages & GSAP animation lifecycle", () => {
     expect(ScrollTrigger.getAll()).toHaveLength(0);
   });
 
+  test("renders 404 for unknown root paths like /portfoliosfad and nested /portfolio/sfad while redirecting legacy /portfolio to home", () => {
+    installDomMocks({ reduceMotion: true, isDesktop: true });
+
+    const { unmount: unmountRoot404 } = render(
+      <MemoryRouter initialEntries={["/portfoliosfad"]}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/ERROR 404/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /BACK TO HOME/i })).toHaveAttribute("href", "/");
+    unmountRoot404();
+
+    const { unmount: unmountNested404 } = render(
+      <MemoryRouter initialEntries={["/portfolio/sfad"]}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/ERROR 404/i)).toBeInTheDocument();
+    unmountNested404();
+
+    const { unmount: unmountLegacyHome } = render(
+      <MemoryRouter initialEntries={["/portfolio"]}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.queryByText(/ERROR 404/i)).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/Loading portfolio/i)).toBeInTheDocument();
+    unmountLegacyHome();
+  });
+
   test("respects prefers-reduced-motion across NotFound, Hero, Projects, ScrollIndicator, and TextType", () => {
     installDomMocks({ reduceMotion: true, isDesktop: true });
 

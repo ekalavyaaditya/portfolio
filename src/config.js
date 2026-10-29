@@ -11,7 +11,9 @@ const normalizeBasePath = (path) => {
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 };
 
-const basePath = normalizeBasePath(process.env.REACT_APP_BASE_PATH || "/portfolio");
+const basePath = normalizeBasePath(
+  process.env.REACT_APP_BASE_PATH ?? process.env.PUBLIC_URL ?? ""
+);
 
 const config = {
   basePath,

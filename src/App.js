@@ -14,7 +14,8 @@ export default function App() {
   const location = useLocation();
   const isHomeRoute =
     Boolean(matchPath({ path: config.homePath, end: true }, location.pathname)) ||
-    Boolean(config.basePath && matchPath({ path: "/", end: true }, location.pathname));
+    Boolean(config.basePath && matchPath({ path: "/", end: true }, location.pathname)) ||
+    Boolean(!config.basePath && matchPath({ path: "/portfolio", end: true }, location.pathname));
 
   const [isLoading, setIsLoading] = useState(isHomeRoute);
 
@@ -81,8 +82,16 @@ export default function App() {
 
   return (
     <Routes>
-      {config.basePath && (
-        <Route path="/" element={<Navigate to={config.homePath} replace />} />
+      {config.basePath ? (
+        <Route
+          path="/"
+          element={<Navigate to={{ pathname: config.homePath, hash: location.hash }} replace />}
+        />
+      ) : (
+        <Route
+          path="/portfolio"
+          element={<Navigate to={{ pathname: "/", hash: location.hash }} replace />}
+        />
       )}
       <Route
         path={config.homePath}
